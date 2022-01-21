@@ -65,7 +65,7 @@ class Suggestor:
     def __init__(this, dictionary):
         this.dictionary = dictionary
 
-    def help(this, length, regex=None, including=None, excluding=None):
+    def help(this, length, regex=None, including=None, excluding=None, excluding_words=set()):
 
         including = set( including if including is not None else "" )
         excluding_rx = "[^" + "".join(sorted(set(excluding))) + "]" if excluding is not None and excluding != [] and excluding != "" and excluding != set() else "."
@@ -81,7 +81,7 @@ class Suggestor:
         candidates = [
             word
             for word in this.dictionary.words_with_length(length)
-                if cregex.match(word) and set(word) >= including
+                if word not in excluding_words and cregex.match(word) and set(word) >= including
         ]
 
         return candidates
@@ -91,15 +91,13 @@ class CumulativeHelper:
         this.dictionary = dictionary
         this.word_length = word_length
         this.suggestor = Suggestor(this.dictionary)
-        this.cumulative_regex = None
-        this.cumulative_including = None
-        this.cumulative_excluding = None
         this.reset()
 
     def reset(this):
         this.reset_regex()
         this.reset_excluding()
         this.reset_including()
+        this.reset_excluding_words()
 
     def reset_regex(this):
         this.cumulative_regex = "." * this.word_length
@@ -109,6 +107,10 @@ class CumulativeHelper:
 
     def reset_excluding(this):
         this.cumulative_excluding = set()
+
+    def reset_excluding_words(this):
+        this.cumulative_excluding_words = set()
+
 
     def merge_regex(this, regex):
         if len(regex) != this.word_length:
@@ -132,6 +134,10 @@ class CumulativeHelper:
 
         this.cumulative_excluding |= set_like
 
+    def merge_excluding_words(this, thing):
+        set_like = thing if type(thing) == set else set([thing])
+        this.cumulative_excluding_words |= set_like
+
     def merge_attempt_result(this, attempt_result):
         regex = "".join(( w if ans == WordleGame.YES else "." for (ans, w) in attempt_result))
         include = [ w for (ans, w) in attempt_result if ans == WordleGame.SOMEWHERE ]
@@ -151,8 +157,11 @@ class CumulativeHelper:
     def excluding(this):
         return this.cumulative_excluding
 
+    def excluding_words(this):
+        return this.cumulative_excluding_words
+
     def suggest(this):
-        return this.suggestor.help(this.word_length, regex=this.regex(), including=this.including(), excluding=this.excluding())
+        return this.suggestor.help(this.word_length, regex=this.regex(), including=this.including(), excluding=this.excluding(), excluding_words=this.excluding_words())
 
 class SelfSolver:
     def run(dictionary, *args, word_length=None, seed=None, answer=None, **kwargs):
@@ -177,7 +186,7 @@ class SelfSolver:
             mintts = min(mintts, len(attempts))
             stddevs = stddev(attempt_len, mtts)
             pad = " " * max(sln_max_len - len(solution), 0) if with_pad else ""
-            print(f"{pad}\"{solution}\" after {len(attempts):2} ([{mintts:2} .. {mtts:2.03f} ±{stddevs:2.03f} .. {maxtts:2}]) {attempts}")
+            print(f"{pad}\"{solution}\" after {len(attempts):2} ([{mintts:2} .. {mtts:2.03f} ±{stddevs:2.03f} .. {maxtts:2}] n={len(attempt_len):<5d} {attempts}")
 
     def __init__(this, game):
         this.dictionary = game.dictionary
@@ -195,6 +204,7 @@ class SelfSolver:
             return word
 
         this.helper.merge_attempt_result(result)
+        this.helper.merge_excluding_words(word)
 
         return False
 
@@ -203,6 +213,7 @@ class SelfSolver:
         start_words = 5
         solved = False
         solution = None
+        coverage = set()
         start_words = this.optimizer.starter_words(this.game.word_length, start_words)
 
         candidates = list(range(min_candidates+1))
@@ -211,18 +222,21 @@ class SelfSolver:
                 break
 
             solved = this.check_and_inform(word)
+
             if pretty_print:
                 print(this.game.formatted_attempt(word))
             if solved:
                 solution = solved
 
+            coverage |= set(word)
+
             candidates = this.helper.suggest()
-            for p in this.attempts:
-                if p in candidates:
-                    candidates.remove(p)
 
         while not solved and len(candidates) != 0:
-            word = candidates[0]
+            word = choose_max(
+                candidates,
+                lambda x: this.optimizer.score(x, coverage)
+            )
 
             solved = this.check_and_inform(word)
             if pretty_print:
@@ -230,10 +244,10 @@ class SelfSolver:
             if solved:
                 solution = solved
 
+            coverage |= set(word)
+
             candidates = this.helper.suggest()
-            for p in this.attempts:
-                if p in candidates:
-                    candidates.remove(p)
+
         if pretty_print:
             print(f"SOLVED! \"{solution}\" after {len(this.attempts)} {this.attempts}")
         return (solution, this.attempts)

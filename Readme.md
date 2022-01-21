@@ -51,6 +51,16 @@ Common dictionaries such as the unix dictionary (`/usr/share/dict/words` on macO
 This repository provides the full wordle dictionary (both attempts and answers) in `wordle-words.txt`.
 These are sorted, so you shouldn't see any spoilers.
 
+## The Solver
+
+### Proficiency
+
+| Dictionary        | Mean attempts | STDDEV | trials |
+|-------------------|---------------|--------|--------|
+| wordle            | 5.246         | 1.509  | 6115   |
+| Unix (any length) | 3.820         | 3.370  | 7575   |
+
+
 ## Requirements
 - Python3
 - termcolor

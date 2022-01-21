@@ -57,8 +57,8 @@ These are sorted, so you shouldn't see any spoilers.
 
 | Dictionary        | Mean attempts | STDDEV | trials |
 |-------------------|---------------|--------|--------|
-| wordle            | 5.246         | 1.509  | 6115   |
-| Unix (any length) | 3.820         | 3.370  | 7575   |
+| wordle            | 5.243         | 1.511  | 23136  |
+| Unix (any length) | 3.749         | 3.162  | 28270  |
 
 
 ## Requirements

@@ -48,3 +48,5 @@ class Dictionary:
 
     def word_lengths(this):
         return list(this.length_bucketed_words.keys())
+
+__all__ = ["Dictionary"]

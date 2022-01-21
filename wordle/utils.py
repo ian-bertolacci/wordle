@@ -1,8 +1,8 @@
 from math import *
 
-inf = -float("inf")
+inf = float("inf")
 
-def chooseMax(iterable, max_fn):
+def choose_max(iterable, max_fn):
     currMax = None
     currScore = -inf
     for thing in iterable:
@@ -17,3 +17,6 @@ def stddev(collection, mean=None):
         mean = sum(collection) / len(collection)
     sumsqr = sum( (pow(e - mean, 2) for e in collection) )
     return sqrt( sumsqr / len(collection))
+
+
+__all__ = ["inf", "choose_max", "stddev"]

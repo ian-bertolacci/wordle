@@ -5,7 +5,7 @@ from random import Random
 from termcolor import colored
 from math import *
 
-from dictionary import *
+from wordle.dictionary import *
 
 class GameException(Exception):
     pass
@@ -67,3 +67,5 @@ class WordleGame:
 
     def check_attempt_solved(attempt_result):
         return all( ( ans == WordleGame.YES for (ans, _) in attempt_result) )
+
+__all__ = ["GameException", "WordleGame"]

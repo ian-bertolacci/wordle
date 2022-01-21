@@ -12,21 +12,21 @@ def main(argv):
     parser = argparse.ArgumentParser()
 
     mode_group = parser.add_mutually_exclusive_group(required=True)
-    mode_group.add_argument("--game", action="store_true", description="Play a wordle game")
-    mode_group.add_argument("--stats", action="store_true", description="Have the solver play sames and print solver statistics")
-    mode_group.add_argument("--helper", action="store_true", description="Help you cheat at a wordle game")
+    mode_group.add_argument("--game", action="store_true", help="play a wordle game")
+    mode_group.add_argument("--stats", action="store_true", help="have the solver play sames and print solver statistics")
+    mode_group.add_argument("--helper", action="store_true", help="help you cheat at a wordle game")
 
-    parser.add_argument("--dictionary-path", dest="dictionary_path", type=str, nargs=1, default="./wordle-words.txt", description="Path to a list of word available for attempts and answers in a gam")
+    parser.add_argument("--dictionary-path", dest="dictionary_path", type=str, nargs=1, default="./wordle-words.txt", help="Path to a list of word available for attempts and answers in a game")
     parser.add_argument("--word-length", dest="word_length", type=int, nargs=1, default=None)
-    parser.add_argument("--words", dest="known_words", type=str, nargs="+", default=None, "set pre-defined words for solver")
+    parser.add_argument("--words", dest="known_words", type=str, nargs="+", default=None, help="set pre-defined words for solver")
 
     loop_group = parser.add_mutually_exclusive_group(required=False)
-    loop_group.add_argument("--loop", dest="loop", action="store_true", default=True, "run solver in infinite loop")
-    loop_group.add_argument("--once", dest="loop", action="store_false", "run solver once (can use with --words)")
+    loop_group.add_argument("--loop", dest="loop", action="store_true", default=True, help="run solver in infinite loop")
+    loop_group.add_argument("--once", dest="loop", action="store_false", help="run solver once (can use with --words)")
 
     pretty_group = parser.add_mutually_exclusive_group(required=False)
-    pretty_group.add_argument("--pretty", dest="pretty", action="store_true", default=True, "run solver in pretty-print mode with highlighting")
-    pretty_group.add_argument("--simple", dest="pretty", action="store_false", "run solver without pretty-print mode")
+    pretty_group.add_argument("--pretty", dest="pretty", action="store_true", default=True, help="run solver in pretty-print mode with highlighting")
+    pretty_group.add_argument("--simple", dest="pretty", action="store_false", help="run solver without pretty-print mode")
 
 
     args = parser.parse_args(argv[1:])

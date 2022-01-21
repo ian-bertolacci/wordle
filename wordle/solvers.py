@@ -168,7 +168,7 @@ class SelfSolver:
         game = WordleGame(dictionary, word_length=word_length, seed=seed, answer=answer)
         return SelfSolver(game).solve(*args, **kwargs)
 
-    def run_loop_with_stats(*args, **kwargs):
+    def run_loop_with_stats(dictionary, **kwargs):
         if "pretty_print" in kwargs:
             with_pad = not kwargs["pretty_print"]
         else:
@@ -177,8 +177,8 @@ class SelfSolver:
         sln_max_len = 0
         mintts = inf
         maxtts = -inf
-        while True:
-            (solution, attempts) = SelfSolver.run(*args, **kwargs)
+        for word in dictionary.words:
+            (solution, attempts) = SelfSolver.run(dictionary, answer=word, **kwargs)
             sln_max_len = max(sln_max_len, len(solution))
             attempt_len.append(len(attempts))
             mtts = sum(attempt_len) / len(attempt_len)

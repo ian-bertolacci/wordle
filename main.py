@@ -16,7 +16,7 @@ def main(argv):
     mode_group.add_argument("--stats", action="store_true", description="Have the solver play sames and print solver statistics")
     mode_group.add_argument("--helper", action="store_true", description="Help you cheat at a wordle game")
 
-    parser.add_argument("--dictionary-path", dest="dictionary_path", type=str, nargs=1, default="/usr/share/dict/words", description="Path to a list of word available for attempts and answers in a gam")
+    parser.add_argument("--dictionary-path", dest="dictionary_path", type=str, nargs=1, default="./wordle-words.txt", description="Path to a list of word available for attempts and answers in a gam")
     parser.add_argument("--word-length", dest="word_length", type=int, nargs=1, default=None)
     parser.add_argument("--words", dest="known_words", type=str, nargs="+", default=None, "set pre-defined words for solver")
 

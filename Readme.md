@@ -11,7 +11,7 @@ usage: main.py [-h] (--game | --stats | --helper)
 optional arguments:
   -h, --help            show this help message and exit
   --game                play a wordle game
-  --stats               have the solver play sames and print solver statistics
+  --stats               have the solver play games and print solver statistics
   --helper              help you cheat at a wordle game
   --dictionary-path DICTIONARY_PATH
                         Path to a list of word available for attempts and
@@ -55,10 +55,11 @@ These are sorted, so you shouldn't see any spoilers.
 
 ### Proficiency
 
-| Dictionary        | Mean attempts | STDDEV | trials |
-|-------------------|---------------|--------|--------|
-| wordle            | 5.243         | 1.511  | 23136  |
-| Unix (any length) | 3.749         | 3.162  | 28270  |
+| Dictionary        | Mean attempts | STDDEV | trials           |
+|-------------------|---------------|--------|------------------|
+| wordle            | 5.232         | 1.514  | all  12972 words |
+| Unix (any length) | 3.749         | 3.162  | all 234371 words |
+| Google english    | 3.460         | 1.228  | all  47152 words |
 
 
 ## Requirements

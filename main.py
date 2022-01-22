@@ -13,7 +13,7 @@ def main(argv):
 
     mode_group = parser.add_mutually_exclusive_group(required=True)
     mode_group.add_argument("--game", action="store_true", help="play a wordle game")
-    mode_group.add_argument("--stats", action="store_true", help="have the solver play sames and print solver statistics")
+    mode_group.add_argument("--stats", action="store_true", help="have the solver play games and print solver statistics")
     mode_group.add_argument("--helper", action="store_true", help="help you cheat at a wordle game")
 
     parser.add_argument("--dictionary-path", dest="dictionary_path", type=str, nargs=1, default="./wordle-words.txt", help="Path to a list of word available for attempts and answers in a game")
